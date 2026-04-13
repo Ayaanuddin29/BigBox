@@ -1,0 +1,50 @@
+﻿body {
+    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.card {
+    border: none;
+}
+
+/*Dark Mode*/
+
+body.dark-mode {
+   /* background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);*/
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #374151;
+    color: #fff;
+}
+
+    body.dark-mode .card {
+        border: none;
+        background: #374151;
+        color: #fff;
+    }
+/*Dark Mode*/
+
+
+/*Incident Create Start*/
+
+.incident-form .form-group {
+    margin-bottom: 1rem;
+}
+
+.incident-form label {
+    font-weight: 600;
+    margin-bottom: 5px;
+    display: block;
+}
+
+.incident-form textarea {
+    height: 100px;
+}
+
+.form-actions {
+    border-top: 1px solid #eaeaea;
+    padding-top: 10px;
+}
+
+/*Incident Create End*/
+
+

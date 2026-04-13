@@ -1,0 +1,162 @@
+﻿@* @model IEnumerable<YourNamespace.Models.IncidentModel> *@
+@{
+    Layout = "_Layout";
+    ViewBag.Title = "Search Incidents";
+}
+
+<h2 class="mb-4">🔍 Search Incidents</h2>
+
+<form asp-action="Search" method="get" class="row g-3 mb-4">
+    <!-- Existing Filters -->
+    <div class="col-md-2">
+        <label class="form-label">Incident Number</label>
+        <input type="text" name="Number" class="form-control" placeholder="Enter Number" />
+    </div>
+    <div class="col-md-2">
+        <label class="form-label">Caller</label>
+        <input type="text" name="Caller" class="form-control" placeholder="Enter Caller Name" />
+    </div>
+    <div class="col-md-2">
+        <label class="form-label">Category</label>
+        <select name="Category" class="form-select">
+            <option value="">-- Select --</option>
+            <option>Category 1</option>
+            <option>Category 2</option>
+        </select>
+    </div>
+    <div class="col-md-2">
+        <label class="form-label">Priority</label>
+        <select name="Priority" class="form-select">
+            <option value="">-- Select --</option>
+            <option>Priority 1</option>
+            <option>Priority 2</option>
+        </select>
+    </div>
+
+    <!-- Date Range Dropdown -->
+    <div class="col-md-2">
+        <label class="form-label">Date Range</label>
+        <select id="DateRange" name="DateRange" class="form-select">
+            <option value="">-- Select --</option>
+            <option value="7">Last 7 Days</option>
+            <option value="15">Last 15 Days</option>
+            <option value="30">Last 30 Days</option>
+            <option value="45">Last 45 Days</option>
+            <option value="90">Last 90 Days</option>
+            <option value="180">Last 180 Days</option>
+            <option value="360">Last 360 Days</option>
+            <option value="custom">Custom</option>
+        </select>
+    </div>
+
+    <!-- Custom Date Range -->
+    <div id="customDateRange" class="col-md-4 d-none">
+        <label class="form-label">Custom Date Range</label>
+        <div class="input-group">
+            <span class="input-group-text">Start</span>
+            <input type="date" name="StartDate" class="form-control" />
+
+            <span class="input-group-text">End</span>
+            <input type="date" name="EndDate" class="form-control" />
+        </div>
+    </div>
+
+    <div class="col-md-12 text-end">
+        <button type="submit" class="btn btn-primary">
+            <i class="fa fa-search"></i> Search
+        </button>
+        <a asp-action="Search" class="btn btn-secondary">
+            <i class="fa fa-undo"></i> Reset
+        </a>
+    </div>
+</form>
+
+<!-- Results Table -->
+@* @if (Model != null && Model.Any()){ *@
+<table class="table table-bordered table-striped text-center">
+        <thead class="table-dark">
+            <tr>
+                <th>Number</th>
+                <th>Caller</th>
+                <th>Category</th>
+                <th>Short Description</th>
+                <th>State</th>
+                <th>Impact</th>
+                <th>Urgency</th>
+                <th>Priority</th>
+                <th>Assigned To</th>
+               @*  <th>Created Date</th> *@
+            </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>INC100001</td>
+            <td>Khaleel Shaik</td>
+            <td>Category 1</td>
+            <td>ShortDescription 1</td>
+            <td>State 1</td>
+            <td>Impact 1</td>
+            <td>Urgency 1</td>
+            <td>Priority 1</td>
+            <td>Arhaam</td>
+        </tr>
+        <tr>
+            <td>INC100002</td>
+            <td>Sameer Shaik</td>
+            <td>Category 2</td>
+            <td>ShortDescription 2</td>
+            <td>State 2</td>
+            <td>Impact 2</td>
+            <td>Urgency 2</td>
+            <td>Priority 2</td>
+            <td>Afsar</td>
+        </tr>
+            @* @foreach (var incident in Model)
+            {
+                <tr>
+                    <td>@incident.Number</td>
+                    <td>@incident.Caller</td>
+                    <td>@incident.Category</td>
+                    <td>@incident.ShortDescription</td>
+                    <td>@incident.State</td>
+                    <td>@incident.Impact</td>
+                    <td>@incident.Urgency</td>
+                    <td>@incident.Priority</td>
+                    <td>@incident.AssignedTo ?? "-"</td>
+                    <td>@incident.CreatedDate.ToString("yyyy-MM-dd")</td>
+                </tr>
+            } *@
+        </tbody>
+    </table>
+@* }
+else
+{
+    <p class="text-muted">No incidents found.</p>
+} *@
+
+@section Scripts {
+    <!-- jQuery + DataTables -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" />
+    <script>                  
+        document.getElementById("DateRange").addEventListener("change", function () {
+            let customRange = document.getElementById("customDateRange");
+            if (this.value === "custom") {
+                customRange.classList.remove("d-none");
+            } else {
+                customRange.classList.add("d-none");
+            }
+        });
+
+        $(document).ready(function () {
+            $("table").DataTable({
+                paging: true,
+                searching: false, // You already have filters
+                ordering: true
+            });
+        });
+    </script>
+}

@@ -1,0 +1,29 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    ViewData["Title"] = "Users List";
+    Layout = "_Layout";
+}
+
+@* @model List<UserListDto> *@
+
+<h3>User Management</h3>
+
+<a asp-action="Create" class="btn btn-primary mb-3">Create User</a>
+
+<table class="table table-bordered">
+    <tr>
+        <th>UserName</th>
+        <th>Email</th>
+       @*  <th>Employee Code</th> *@
+        <th>Department</th>
+    </tr>
+    @foreach (var u in Model)
+    {
+        <tr>
+            <td>@u.UserId</td>
+            <td>@u.Email</td>
+           @*  <td>@u.EmployeeCode</td> *@
+            <td>@u.Department</td>
+        </tr>
+    }
+</table>

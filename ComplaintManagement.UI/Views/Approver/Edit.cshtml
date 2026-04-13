@@ -1,0 +1,100 @@
+﻿@model ComplaintManagement.Util.Models.UserManagement.ApproverDto
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@{
+    ViewData["Title"] = "Edit Approver";
+    Layout = "_Layout";
+}
+
+<h3 class="mb-4">Edit Approver</h3>
+
+<form asp-action="Edit" method="post">
+
+    <input type="hidden" asp-for="ManagerCode" />
+
+    <div class="mb-3">
+        <label asp-for="ManagerName" class="form-label"></label>
+        <input asp-for="ManagerName" class="form-control" />
+        <span asp-validation-for="ManagerName" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Username" class="form-label"></label>
+        <input asp-for="Username" class="form-control" readonly />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="ManagerName2" class="form-label"></label>
+        <input asp-for="ManagerName2" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="ManagerName3" class="form-label"></label>
+        <input asp-for="ManagerName3" class="form-control" />
+    </div>
+
+    <div class="form-check mb-4">
+        <input asp-for="Availability" class="form-check-input" />
+        <label asp-for="Availability" class="form-check-label"></label>
+    </div>
+
+    <!-- Alternate Manager Dropdown -->
+    <div class="mb-3" id="altManagerDiv">
+        <label asp-for="AltMgrUsername" class="form-label">
+            Alternate Manager
+        </label>
+
+        <select asp-for="AltMgrUsername" class="form-control">
+            <option value="">-- Select Alternate Manager --</option>
+
+            @if (ViewBag.AltManagers != null)
+            {
+                foreach (var item in ViewBag.AltManagers as IEnumerable<ComplaintManagement.Util.Models.UserManagement.ApproverDto>)
+                {
+                    <option value="@item.Username">
+                        @item.ManagerName (@item.Username)
+                    </option>
+                }
+            }
+        </select>
+    </div>
+
+    <!-- Checkboxes -->
+    <div class="form-check mb-2">
+        <input asp-for="Active" class="form-check-input" />
+        <label asp-for="Active" class="form-check-label"></label>
+    </div>
+    
+
+    <button type="submit" class="btn btn-primary">Update</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+
+</form>
+
+@section Scripts {
+    <script>       
+
+        function toggleAlternate() {
+            var availability = document.getElementById("Availability").checked;
+            var section = document.getElementById("altManagerDiv");
+
+            if (availability) {
+                section.style.display = "none";
+            } else {
+                section.style.display = "block";
+            }
+        }
+
+        document.getElementById("Availability").addEventListener("change", toggleAlternate);
+
+        // Run on page load
+        window.onload = toggleAlternate;
+
+    </script>
+}
+
+@* @section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+} *@

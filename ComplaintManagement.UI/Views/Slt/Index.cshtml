@@ -1,0 +1,135 @@
+﻿@{
+    ViewData["Title"] = "Service Level Targets";
+    Layout = "_Layout";
+}
+
+<h2>Manage Service Level Targets</h2>
+
+<div class="card p-3 mt-3">
+
+    <!-- Filter -->
+    <div class="row mb-3">
+        <div class="col-md-3">
+            <label class="form-label fw-bold">Option</label>
+            <select id="ddlStatus" class="form-select">
+                <option value="Active">Active</option>
+                <option value="Inactive">Inactive</option>
+                <option value="All">All</option>
+            </select>
+        </div>
+        <div class="col-md-1 mt-4">
+            <button id="btnFilter" class="btn btn-primary">Filter</button>
+        </div>
+        <div class="col-md-1 mt-4">
+            <button id="btnNew" class="btn btn-success">+ New</button>
+        </div>
+    </div>
+
+    <!-- GRID -->
+    <table class="table table-bordered table-striped text-center" id="tblSlt">
+        <thead class="table-light">
+            <tr>
+                <th>SLA Id</th>
+                <th>SLA Name</th>
+                <th>Initial Response Days</th>
+                <th>Initial Response Hours</th>
+                <th>Initial Response Minutes</th>
+                <th>Target Close Days</th>
+                <th>Target Close Hours</th>
+                <th>Target Close Minutes</th>
+                <th>SLA Threaten Days</th>
+                <th>SLA Threaten Hours</th>
+                <th>SLA Threaten Mins</th>
+               @*  <th>SLA Type</th> *@
+                <th>Active</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+
+    <!-- INLINE FORM SECTION (HIDDEN INITIALLY) -->
+    <div id="formSection" class="mt-4 p-3 border rounded bg-light" style="display:none;">
+
+        <h5 id="formTitle">Add New SLA Target</h5>
+        <input type="hidden" id="SlaId" />
+        <div class="row mt-3">
+        <div class="col-md-3">
+            <label class="form-label">SLA Name</label>
+            <input type="text" id="SlaName" class="form-control" />
+        </div>
+
+        <div class="col-md-3">
+            <label class="form-label">SLT Name 2 (Optional)</label>
+            <input type="text" id="SlaNameAr" class="form-control" />
+        </div>
+        <div class="col-md-3">
+            <label class="form-label">SLT Name 3 (Optional)</label>
+            <input type="text" id="SlaNameOth" class="form-control" />
+        </div>
+
+            <div class="col-md-3">
+                <label class="form-label">Sla Type</label>
+                <select id="SlaType" class="form-select">
+                    <option value="1">OLA</option>
+                    <option value="2" selected>SLA</option>
+                </select>
+            </div>        
+        </div>
+        <div class="row mt-3">        
+
+        <div class="col-md-4">
+            <label class="form-label fw-bold">Target Initial Response</label>
+            <div class="input-group">
+                <input type="number" id="InitialResponseDays" class="form-control" placeholder="Days" />
+                <input type="number" id="InitialResponseHours" class="form-control" placeholder="Hours" />
+                <input type="number" id="InitialResponseMinutes" class="form-control" placeholder="Minutes" />
+            </div>
+        </div>
+        <div class="col-md-4">
+            <label class="form-label fw-bold">Target Close Response</label>
+            <div class="input-group">
+                <input type="number" id="TargetCloseDays" class="form-control" placeholder="Days" />
+                    <input type="number" id="TargetCloseHours" class="form-control" placeholder="Hours" />
+                    <input type="number" id="TargetCloseMinutes" class="form-control" placeholder="Minutes" />
+            </div>
+        </div>
+        <div class="col-md-4">
+            <label class="form-label fw-bold">SLT Warning After</label>
+            <div class="input-group">
+                    <input type="number" id="SlaThreatenDays" class="form-control" placeholder="Days" />
+                    <input type="number" id="SlaThreatenHours" class="form-control" placeholder="Hours" />
+                    <input type="number" id="SlaThreatenMinutes" class="form-control" placeholder="Minutes" />
+            </div>
+        </div>
+                
+        </div>
+        <div class="row mt-3">
+            <div class="col-md-4">
+                <input class="form-check-input" type="checkbox" id="IsActive" />
+                <label class="form-check-label" for="IsActive">Active</label>
+            </div>
+            </div>
+        <div class="row mt-3">
+            <div class="col-md-6">
+                <label class="form-label">Details</label>
+                <textarea id="SlaDetails" class="form-control" rows="3"></textarea>
+            </div>
+        </div>
+        <div class="mt-3">
+            <button id="btnSave" class="btn btn-success">Save</button>
+            <button id="btnReset" class="btn btn-secondary">Reset</button>
+        </div>
+        
+    </div>
+
+</div>
+
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" />
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="~/js/slt.js"></script>
+}

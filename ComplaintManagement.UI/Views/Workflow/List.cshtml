@@ -1,0 +1,37 @@
+﻿@model List<ComplaintManagement.Util.Models.Workflow.WorkflowMasterModel>
+
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Workflow List";
+}
+
+<h3>Workflow List</h3>
+
+<a href="/Workflow/Index" class="btn btn-success mb-3">+ Create Workflow</a>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Module</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.WorkflowId</td>
+                <td>@item.WorkflowName</td>
+                <td>@item.Module</td>
+                <td>
+                    <a class="btn btn-primary btn-sm"
+                       href="/Workflow/Index/@item.WorkflowId">
+                        Edit
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

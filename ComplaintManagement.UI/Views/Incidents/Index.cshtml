@@ -1,0 +1,141 @@
+﻿@model List<ComplaintManagement.UI.Models.IncidentListItemViewModel>
+@{
+    Layout = "_Layout";
+    ViewBag.Title = "Incident List";
+}
+
+<style>
+    #incidentTable a {
+        color: #0d6efd;
+        text-decoration: none;
+    }
+
+        #incidentTable a:hover {
+            text-decoration: underline;
+            color: #0056b3;
+        }
+</style>
+
+<h2 class="mb-4">📋 Incident List</h2>
+
+<!-- Search & Filter is automatically added by DataTables -->
+<table id="incidentTable" class="table table-bordered table-striped text-center">
+    <thead class="table-dark">
+        <tr>
+            <th>Number</th>
+            <th>Caller</th>
+            <th>Category</th>
+            <th>Short Description</th>
+            <th>State</th>
+            <th>Impact</th>
+            <th>Urgency</th>
+            <th>Priority</th>
+            <th>Assigned To</th>
+        </tr>
+    </thead>
+    <tbody>
+        @* <tr>
+            <td>INC100001</td>
+            <td>Khaleel Shaik</td>
+            <td>Category 1</td>
+            <td>ShortDescription 1</td>
+            <td>State 1</td>
+            <td>Impact 1</td>
+            <td>Urgency 1</td>
+            <td>Priority 1</td>
+            <td>Arhaam</td>
+        </tr>
+        <tr>
+            <td>INC100002</td>
+            <td>Sameer Shaik</td>
+            <td>Category 2</td>
+            <td>ShortDescription 2</td>
+            <td>State 2</td>
+            <td>Impact 2</td>
+            <td>Urgency 2</td>
+            <td>Priority 2</td>
+            <td>Afsar</td>
+        </tr> *@
+        @* Uncomment if loading from Model *@
+        
+        @foreach (var incident in Model)
+        {
+            <tr>
+                <td>
+                    <a href="@Url.Action("Manage", "Incidents", new { id = incident.Number })" class="text-decoration-none fw-bold text-primary">
+                        @incident.Number
+                    </a>
+                </td>                
+                <td>@incident.Caller</td>
+                <td>@incident.Category</td>
+                <td>@incident.ShortDescription</td>
+                <td>@incident.State</td>
+                <td>@incident.Impact</td>
+                <td>@incident.Urgency</td>
+                <td>@incident.Priority</td>
+                <td>@incident.AssignedTo</td>
+            </tr>
+        }
+       
+    </tbody>
+</table>
+
+<!-- Export Buttons -->
+<div class="text-end mt-3">
+    <a href="@Url.Action("ExportToExcel")" class="btn btn-outline-success">📥 Export to Excel</a>
+    <a href="@Url.Action("ExportToPdf")" class="btn btn-outline-danger">📄 Export to PDF</a>
+</div>
+
+@if (TempData["Message"] != null)
+{
+    <div id="toastContainer" style="position: fixed; top: 20px; right: 20px; z-index: 9999;"></div>
+}
+
+@section Scripts {
+    <!-- jQuery + DataTables -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" />
+
+    <script>
+        $(document).ready(function () {
+            $('#incidentTable').DataTable({
+                paging: true,
+                searching: true,
+                ordering: true,
+                lengthChange: true,
+                pageLength: 5,
+                order: [[0, "desc"]]
+            });
+
+            // ✅ Toast logic after jQuery is loaded
+        @if (TempData["Message"] != null)
+        {
+            <text>
+                    showToast(@Html.Raw(Json.Serialize(TempData["Message"])));
+            </text>
+        }
+
+                function showToast(message) {
+                    const toast = $(`
+                            <div class="toast align-items-center text-white bg-success border-0 show" role="alert" aria-live="assertive" aria-atomic="true" style="min-width: 250px;">
+                                <div class="d-flex">
+                                    <div class="toast-body">${message}</div>
+                                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                                </div>
+                            </div>
+                        `);
+
+                    $("#toastContainer").append(toast);
+
+                    setTimeout(() => {
+                        toast.fadeOut(400, function () {
+                            $(this).remove();
+                        });
+                    }, 3000);
+                }
+        });
+    </script>
+}

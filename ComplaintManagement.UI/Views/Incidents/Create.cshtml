@@ -1,0 +1,362 @@
+﻿@* @model YourApp.Models.IncidentViewModel *@
+@model ComplaintManagement.UI.Models.IncidentCreateViewModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@{
+    Layout = "_Layout";
+}
+@{
+    ViewData["Title"] = "Create Incident";
+}
+
+<link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+<script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.12/jquery.validate.unobtrusive.min.js"></script>
+
+
+<div class="page-header">
+    <h3>Create Incident</h3>
+</div>
+
+<form asp-action="Create" asp-controller="Incidents" method="post" class="incident-form">
+    @Html.AntiForgeryToken()
+    <div class="row">
+        <!-- Number -->
+        <div class="col-md-6">
+            <div class="form-group">
+                <label>Number</label>
+                <input type="text" class="form-control" asp-for="Number" value="INC0010001" readonly />
+            </div>
+        </div>
+        <!-- Caller -->
+        <div class="col-md-6">
+            <div class="form-group">
+                <label>Caller <span class="text-danger">*</span></label>
+                <div class="input-group">
+                    <input type="text" class="form-control" asp-for="Caller" />
+                    <button class="btn btn-outline-secondary" type="button">Search Caller</button>
+                    <span asp-validation-for="Caller" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Category -->
+        <div class="col-md-6">
+            <div class="form-group">
+                <label asp-for="Category">Category</label>
+                <select class="form-select" asp-for="Category" onchange="setCategoryText(this)">
+                   @*  <option value="1">Inquiry / Help</option>
+                    <option value="2">Request</option>
+                    <option value="3">Incident</option> *@
+                </select>
+                <span asp-validation-for="Category" class="text-danger"></span>
+                <input type="hidden" asp-for="CategoryText" />
+            </div>
+        </div>
+        <!-- Subcategory -->
+        <div class="col-md-6">
+            <div class="form-group">
+                <label>Subcategory</label>
+                <select class="form-select" asp-for="SubCategory">
+                   @*  <option value="0">-- None --</option>
+                    <option value="1">-- Sub Category1 --</option> *@
+                </select>
+                <span asp-validation-for="SubCategory" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Service -->
+        <div class="col-md-6">
+            <div class="form-group">
+                <label>Service</label>
+                <select class="form-select" asp-for="Service">
+                    @* <option value="0">-- None --</option>
+                    <option value="1">-- Service1 --</option> *@
+                </select>
+                <span asp-validation-for="Service" class="text-danger"></span>
+            </div>
+        </div>
+        <!-- Service Offering -->
+        <div class="col-md-6">
+            <div class="form-group">
+                <label>Service Offering</label>
+                <input type="text" class="form-control" asp-for="ServiceOffering" />
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Configuration Item -->
+        <div class="col-md-6">
+            <div class="form-group">
+                <label>Configuration Item</label>
+                <input type="text" class="form-control" asp-for="ConfigurationItem" />
+            </div>
+        </div>
+        <!-- Short Description -->
+        <div class="col-md-6">
+            <div class="form-group">
+                <label>Short Description <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" asp-for="ShortDescription" />
+                <span asp-validation-for="ShortDescription" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Description (full row) -->
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-group">
+                @* <label>Description</label>
+                <textarea class="form-control" asp-for="Description"></textarea>   *@ 
+                <label>Description</label>
+                <div id="editor" style="height: 200px;"></div>
+                <input type="hidden" name="Description" id="hiddenDescription" />
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Channel -->
+        <div class="col-md-3">
+            <div class="form-group">
+                <label>Channel</label>
+                <select id="Channel" name="Channel" class="form-select"></select>
+               @*  <select class="form-select" asp-for="Channel">
+                    <option value="0">-- None --</option>
+                    <option value="1">-- Channel 1 --</option>
+                </select> *@
+            </div>
+        </div>
+        <!-- State -->
+        <div class="col-md-3">
+            <div class="form-group">
+                <label>State</label>
+                <select id="State" name="State" class="form-select"></select>
+@*                 <select class="form-select" asp-for="State">
+                    <option value="1">New</option>
+                    <option value="2">In Progress</option>
+                    <option value="3">Resolved</option>
+                </select> *@
+            </div>
+        </div>
+        <!-- Impact -->
+        <div class="col-md-3">
+            <div class="form-group">
+                <label>Impact</label>
+                <select id="Impact" name="Impact" class="form-select"></select>
+                @* <select class="form-select" asp-for="Impact">
+                    <option value="1">1 - High</option>
+                    <option value="2">2 - Medium</option>
+                    <option value="3">3 - Low</option>
+                </select> *@
+            </div>
+        </div>
+        <!-- Urgency -->
+        <div class="col-md-3">
+            <div class="form-group">
+                <label>Urgency</label>
+                <select id="Urgency" name="Urgency" class="form-select"></select>
+                @* <select class="form-select" asp-for="Urgency">
+                    <option value="1">1 - High</option>
+                    <option value="2">2 - Medium</option>
+                    <option value="3">3 - Low</option>
+                </select> *@
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Priority -->
+        <div class="col-md-6">
+            <div class="form-group">
+                <label>Priority</label>
+                <select id="Priority" name="Priority" class="form-select" onchange="setPriorityText(this)"></select>
+                @* <select class="form-select" asp-for="Priority">
+                    <option value="1">1 - Critical</option>
+                    <option value="2">2 - High</option>
+                    <option value="3">3 - Normal</option>
+                    <option value="4">4 - Low</option>
+                </select> *@
+
+                <input type="hidden" asp-for="PriorityText" />
+            </div>
+        </div>
+        <!-- Assignment Group -->
+        <div class="col-md-3">
+            <div class="form-group">
+                <label>Assignment Group</label>
+                <input type="text" class="form-control" asp-for="AssignmentGroup" />
+            </div>
+        </div>
+        <!-- Assigned To -->
+        <div class="col-md-3">
+            <div class="form-group">
+                <label>Assigned To</label>
+                <input type="text" class="form-control" asp-for="AssignedTo" />
+            </div>
+        </div>
+    </div>
+
+    <!-- Buttons -->
+    <div class="form-actions text-end mt-3">
+        <button type="submit" class="btn btn-primary">Create</button>
+       
+        <button type="button" class="btn btn-success">Resolve</button>
+    </div>
+</form>
+
+<script>
+    var quill = new Quill('#editor', {
+        theme: 'snow',
+        modules: {
+            toolbar: [
+                [{ 'font': [] }, { 'size': [] }],
+                ['bold', 'italic', 'underline', 'strike'],
+                [{ 'color': [] }, { 'background': [] }],
+                [{ 'script': 'sub' }, { 'script': 'super' }],
+                [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+                [{ 'align': [] }],
+                ['blockquote', 'code-block'],
+                [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+                [{ 'indent': '-1' }, { 'indent': '+1' }],
+                ['link', 'image', 'video'],
+                ['clean']
+            ]
+        }
+    });
+
+    // Sync content on form submit
+    document.querySelector('form').addEventListener('submit', function () {
+        document.querySelector('#hiddenDescription').value = quill.root.innerHTML;
+    });
+       
+    // $(document).ready(function () {
+    //     $.ajax({
+    //         url: "https://localhost:51647/api/Master/robox_m_priority", // ✅ your API URL
+    //         type: "GET",
+    //         success: function (data) {
+    //             var ddl = $("#Priority");
+    //             ddl.empty();
+    //             ddl.append($("<option></option>").val("").html("-- Select Priority --"));
+    //             $.each(data, function (i, item) {
+    //                 ddl.append($("<option></option>").val(item.id).html(item.name));
+    //             });
+    //         },
+    //         error: function (xhr) {
+    //             console.error("Error loading priorities:", xhr);
+    //         }
+    //     });
+
+    // });
+
+    function loadDropdown(apiUrl, ddlSelector, defaultText) {
+        $.ajax({
+            url: apiUrl,
+            type: "GET",
+            success: function (data) {
+                var ddl = $(ddlSelector);
+                ddl.empty();
+                if (defaultText) ddl.append($("<option></option>").val("").html(defaultText));
+                $.each(data, function (i, item) {
+                    ddl.append($("<option></option>").val(item.id).html(item.name));
+                });
+            },
+            error: function (xhr) {
+                console.error("Error loading " + ddlSelector + ":", xhr);
+            }
+        });
+    }
+
+    $("#Category").change(function () {
+        loadSubCategories();
+    });
+
+    $("#SubCategory").change(function () {
+        loadServices();
+    });
+
+    function loadCategories() {
+        $.get("/Category/GetAll", function (data) {
+            const ddl = $("#Category");
+            ddl.empty().append('<option value="">-- Select Category --</option>');
+            $.each(data, function (i, item) {
+                ddl.append(`<option value="${item.id}">${item.name}</option>`);
+            });
+        });
+    }
+
+    function loadSubCategories() {
+
+        const categoryId = $("#Category").val();
+        const url = categoryId
+            ? `/SubCategory/GetByCategory?categoryId=${categoryId}`
+            : `/SubCategory/GetAll`;
+
+        $.get(url, function (data) {
+            const ddl = $("#SubCategory");
+            ddl.empty().append('<option value="">-- Select Sub Category --</option>');
+            $.each(data, function (i, item) {
+                ddl.append(`<option value="${item.id}">${item.name}</option>`);
+            });
+        });
+    }
+
+    function loadServices() {
+        const subCategoryId = $("#SubCategory").val();
+
+        const url = subCategoryId
+            ? `/Service/GetBySubCategory?subCategoryId=${subCategoryId}`
+            : `/Service/GetAll`;
+
+        $.get(url, function (data) {
+            const ddl = $("#Service");
+            ddl.empty();
+            ddl.append(`<option value="">-- Select Service --</option>`);
+            $.each(data, function (i, item) {
+                ddl.append(`<option value="${item.id}">${item.name}</option>`);
+            });
+        });
+    }
+
+    $(document).ready(function () {
+        loadDropdown("https://localhost:51647/api/Master/robox_m_priority", "#Priority", "-- Select Priority --");
+        loadDropdown("https://localhost:51647/api/Master/robox_m_urgency", "#Urgency", "-- Select Urgency --");
+        loadDropdown("https://localhost:51647/api/Master/robox_m_impact", "#Impact", "-- Select Impact --");
+        loadDropdown("https://localhost:51647/api/Master/robox_m_channel", "#Channel", "-- Select Channel --");
+        loadDropdown("https://localhost:51647/api/Master/robox_m_status_incident", "#State", "");
+        loadCategories();
+        loadSubCategories();
+        loadServices();
+        // loadDropdown("https://localhost:51647/api/Master/robox_m_category", "#Category", "-- Select Category --");
+
+        // // Optional: load subcategory dynamically
+        // $("#Category").change(function () {
+        //     var categoryId = $(this).val();
+        //     if (categoryId) {
+        //         loadDropdown("https://localhost:51647/api/Master/robox_m_subcategory?categoryId=" + categoryId, "#SubCategory", "-- Select SubCategory --");
+        //     } else {
+        //         $("#SubCategory").empty().append($("<option></option>").val("").html("-- Select SubCategory --"));
+        //     }
+        // });
+    });
+
+    function setCategoryText(select) {
+        var text = select.options[select.selectedIndex].text;
+        document.getElementById("CategoryText").value = text;
+    }
+
+    function setPriorityText(select) {
+        var text = select.options[select.selectedIndex].text;
+        document.getElementById("PriorityText").value = text;
+    }
+
+
+</script>
